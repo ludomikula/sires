@@ -19,6 +19,8 @@ RUN apk add --no-cache bash
 COPY --chown=spring:spring --from=builder /build/target/*.jar /sires/app.jar
 COPY --chmod=0750 --chown=spring:spring docker/docker-entry.sh docker-entry.sh
 
+EXPOSE 8080
+
 USER spring:spring
 ENTRYPOINT ["sh", "docker-entry.sh"]
 

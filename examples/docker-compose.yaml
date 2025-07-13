@@ -1,0 +1,21 @@
+services:
+
+  ##
+  ## Sires - Simple Reporting Server
+  ##
+  sires:
+    image: docker.io/ludomikula/sires:latest
+    container_name: sires
+    environment:
+      # Where to look for jasper report templates
+      SIRES_TEMPLATES_FOLDER: "/sires/data/templates"
+      # Where to cache generated reports
+      SIRES_REPORTS_CACHE_FOLDER: "/sires/data/reports"
+      # Cache generated reports for given amount of seconds
+      SIRES_REPORTS_CACHE_TIMEOUT: 300
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./:/sires/data
+    restart: unless-stopped
+

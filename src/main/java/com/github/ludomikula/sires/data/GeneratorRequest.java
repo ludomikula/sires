@@ -1,5 +1,6 @@
 package com.github.ludomikula.sires.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,7 +19,7 @@ import org.springframework.http.MediaType;
 import java.util.HashMap;
 import java.util.Map;
 
-@Schema
+@Schema(description = "Generator request defining settings, properties and data pushed to the template.")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -45,12 +46,18 @@ public class GeneratorRequest {
         }
     }
 
+    @Schema(description = "Defines what template to use to generate the report. Use template filename without extension. (For example if template file is 'mytemplate.jasper', template should be 'mytemplate')")
     @NotBlank
     private String template;
+
+    @Schema(description = "Determines file type of generated report.", defaultValue = "PDF")
     @NotNull
     private DocumentType documentType = DocumentType.PDF;
+
+    @Schema(description = "Filename of generated file. If not specified, it's created from 'report' + timestamp + extension of document type, for example: 'report-1752416118.pdf'")
     private String documentName;
 
+    @Schema(description = "Settings specific for generated file type.")
     @JsonTypeInfo(
             use = JsonTypeInfo.Id.NAME,
             include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
@@ -60,9 +67,14 @@ public class GeneratorRequest {
             @JsonSubTypes.Type(value = PdfExporterSettings.class, name = "PDF")
     )
     private ExporterSettings settings;
+
+    @Schema(description = "Parameters injected into template. Within template, they can be access using $P{property_name}.")
     private Map<String, Object> parameters = new HashMap<>();
+
+    @Schema(description = "Data injected into template as a JsonDataSource and also as JSON_INPUT_DATA parameter.")
     private JsonNode data;
 
+    @JsonIgnore
     public String getReportFileName() {
         if (StringUtils.isBlank(documentName)) {
             return "report-" + System.currentTimeMillis() + documentType.extension();
