@@ -1,0 +1,29 @@
+spring:
+  main:
+    banner-mode: off
+  application:
+    name: sires
+
+generator:
+  reports:
+    cache: ${SIRES_REPORTS_CACHE_FOLDER:/sires/data/reports}
+    keepFor: ${SIRES_REPORTS_CACHE_TIMEOUT:300}
+  templates:
+    folder: ${SIRES_TEMPLATES_FOLDER:/sires/data/templates}
+
+springdoc:
+  override-with-generic-response: false
+  packagesToScan: com.github.ludomikula.sires
+
+  swagger-ui:
+    enabled: true
+    use-root-path: true
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    tagsSorter: alpha
+
+  api-docs:
+    enabled: true
+    resolve-schema-properties: true
+    path: /api-docs
+    version: openapi_3_1
